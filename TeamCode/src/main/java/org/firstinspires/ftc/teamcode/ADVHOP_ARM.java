@@ -289,7 +289,7 @@ public class ADVHOP_ARM extends OpMode {
             basePower = .6;
         }
 
-        double max = Math.abs(findMax(frontLeftPower, frontRightPower, backLeftPower, backRightPower));
+        double max = Math.abs(CommonMethods.findMax(frontLeftPower, frontRightPower, backLeftPower, backRightPower));
 
         if (max != 0) {
             frontLeftPower = (frontLeftPower / max) * basePower;
@@ -369,14 +369,6 @@ public class ADVHOP_ARM extends OpMode {
         globalAngle = 0;
     }
 
-    private double findMax(double... values) {
-        double max = Double.NEGATIVE_INFINITY;
 
-        for (double d : values) {
-            if (d > max) max = d;
-        }
-
-        return max;
-    }
 
 }

@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Autonomous Path 1 (TL/BR)", group = "Autonomous Path")
 public class Autonomous_Path1 extends LinearOpMode {
@@ -12,22 +13,56 @@ public class Autonomous_Path1 extends LinearOpMode {
     private AutonomousFunctions AutoFunc = null;
     //  Declare hardware variables
     //Declare motors
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
+    private DcMotor leftFrontMotor;
+    private DcMotor rightFrontMotor;
+    private DcMotor leftBackMotor;
+    private DcMotor rightBackMotor;
+    private DcMotor slideTiltMotor;
+    private DcMotor slideTiltMotor2;
+    private DcMotorSimple intakeLeftMotor;
+    private DcMotorSimple intakeRightMotor;
+    private BNO055IMU imu;
     // Detector object
    // private GoldAlignDetector detector = null;
 
-    public void Initialise() {
-        //Initialise hardware variables from configuration.
-        //Phone configuration = "Testing_v2"
-        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
-        rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+    private void Initialise() {
+        telemetry.addData("Status", "Starting up..");
+        telemetry.update();
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        rightFrontMotor = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        slideTiltMotor = hardwareMap.get(DcMotor.class, "slideTiltMotor");
+        slideTiltMotor2 = hardwareMap.get(DcMotor.class, "slideTiltMotor2");
+        slideTiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideTiltMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeLeftMotor = hardwareMap.get(DcMotorSimple.class,"intakeLeftMotor");
+        intakeRightMotor = hardwareMap.get(DcMotorSimple.class, "intakeRightMotor");
+        intakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         //Initialise AutonomousFunctions instance with hardware variables; set time interval
-        AutoFunc = new AutonomousFunctions(leftMotor, rightMotor, 500);
-        // Create detector, initialize it with the app context and camera
-        //detector = new GoldAlignDetector();
-       // AutoFunc.InitialiseDetector(detector, hardwareMap.appContext);
+        AutoFunc = new AutonomousFunctions(leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor);
+
     }
 
     @Override
