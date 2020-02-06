@@ -59,8 +59,8 @@ public class ADVHOP_ARM extends OpMode {
     private DcMotor slideTiltMotor = null;
     private DcMotor slideTiltMotor2 = null;
     private CRServo slideExtendServo = null;
-    private DcMotor intakeLeftMotor = null;
-    private DcMotor intakeRightMotor = null;
+    private DcMotorSimple intakeLeftMotor = null;
+    private DcMotorSimple intakeRightMotor = null;
     private BNO055IMU imu;
     private float turnSpeed = 0.5f;
     private PIDController pidDrive;
@@ -71,7 +71,8 @@ public class ADVHOP_ARM extends OpMode {
     private boolean pidActive = false;
     private double frontLeftPower, frontRightPower, backLeftPower, backRightPower, max;
     private int numOfRotations;
-
+    private CRServo clampServo = null;
+    double grabberRotatePower;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -99,15 +100,19 @@ public class ADVHOP_ARM extends OpMode {
         grabberRotateServo = hardwareMap.get(CRServo.class, "grabberRotateServo");
 
         slideExtendServo = hardwareMap.get(CRServo.class, "slideExtendServo");
+        /*
         slideTiltMotor = hardwareMap.get(DcMotor.class, "slideTiltMotor");
         slideTiltMotor2 = hardwareMap.get(DcMotor.class, "slideTiltMotor2");
         slideTiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideTiltMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         */
 
-        intakeLeftMotor = hardwareMap.get(DcMotor.class,"intakeLeftMotor");
-        intakeRightMotor = hardwareMap.get(DcMotor.class, "intakeRightMotor");
+        intakeLeftMotor = hardwareMap.get(DcMotorSimple.class,"intakeLeftMotor");
+        intakeRightMotor = hardwareMap.get(DcMotorSimple.class, "intakeRightMotor");
         intakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        clampServo = hardwareMap.get(CRServo.class, "clampServo");
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -171,21 +176,24 @@ public class ADVHOP_ARM extends OpMode {
         if (slideTiltPower == 0) {
             slideTiltPower = 0.05;
         }
-        slideTiltMotor.setPower(slideTiltPower);
-        slideTiltMotor2.setPower(slideTiltPower);
+        //slideTiltMotor.setPower(slideTiltPower);
+        //slideTiltMotor2.setPower(slideTiltPower);
 
 
-        double grabberRotatePower = (gamepad2.dpad_up ? 1 : 0) + (gamepad2.dpad_down ? -1 : 0);
-        grabberRotateServo.setPower(grabberRotatePower);
+        grabberRotatePower = (gamepad2.dpad_up ? 1 : 0) + (gamepad2.dpad_down ? -1 : 0);
+        grabberRotatePower = grabberRotatePower / 4;
+        grabberRotateServo.setPower(-grabberRotatePower);
 
+        double clampServoPower = gamepad2.right_bumper ? 1 : -gamepad2.right_trigger;
+        clampServo.setPower(clampServoPower);
         double intakePower = gamepad2.x ? 1 : 0;
-        intakeLeftMotor.setPower(intakePower);
-        intakeRightMotor.setPower(intakePower);
+        intakeLeftMotor.setPower(-intakePower);
+        intakeRightMotor.setPower(-intakePower);
 
 
         // Close grabber
         if (gamepad2.a) {
-            grabberCloseServo.setPower(1);
+            grabberCloseServo.setPower(-0.5);
         }
         // Open grabber
         else if (gamepad2.b) {
@@ -197,7 +205,7 @@ public class ADVHOP_ARM extends OpMode {
                 public void run() {
 
                     try {
-                        grabberCloseServo.setPower(-1);
+                        grabberCloseServo.setPower(1);
                         Thread.sleep(800);
                         grabberCloseServo.setPower(0);
                     } catch (InterruptedException e) {
@@ -206,7 +214,7 @@ public class ADVHOP_ARM extends OpMode {
 
 
                 }
-            }, 1000);
+            }, 0);
         }
 
         driveControl();
@@ -329,6 +337,7 @@ public class ADVHOP_ARM extends OpMode {
         telemetry.addData("3 correction", correction);
         telemetry.addData("maxPower", "(%.2f)", max);
         telemetry.addData("Rotations: ", numOfRotations);
+        telemetry.addData("grabberRotatePower", grabberRotatePower);
         telemetry.update();
     }
 
