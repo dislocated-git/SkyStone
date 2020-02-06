@@ -59,8 +59,8 @@ public class ADVHOP_ARM extends OpMode {
     private DcMotor slideTiltMotor = null;
     private DcMotor slideTiltMotor2 = null;
     private CRServo slideExtendServo = null;
-    private DcMotorSimple intakeLeftMotor = null;
-    private DcMotorSimple intakeRightMotor = null;
+    private DcMotor intakeLeftMotor = null;
+    private DcMotor intakeRightMotor = null;
     private BNO055IMU imu;
     private float turnSpeed = 0.5f;
     private PIDController pidDrive;
@@ -104,8 +104,8 @@ public class ADVHOP_ARM extends OpMode {
         slideTiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideTiltMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        intakeLeftMotor = hardwareMap.get(DcMotorSimple.class,"intakeLeftMotor");
-        intakeRightMotor = hardwareMap.get(DcMotorSimple.class, "intakeRightMotor");
+        intakeLeftMotor = hardwareMap.get(DcMotor.class,"intakeLeftMotor");
+        intakeRightMotor = hardwareMap.get(DcMotor.class, "intakeRightMotor");
         intakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
