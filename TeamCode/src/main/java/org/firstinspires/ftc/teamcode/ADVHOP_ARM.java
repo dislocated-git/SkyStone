@@ -186,7 +186,7 @@ public class ADVHOP_ARM extends OpMode {
 
         double clampServoPower = gamepad2.right_bumper ? 1 : -gamepad2.right_trigger;
         clampServo.setPower(clampServoPower);
-        double intakePower = gamepad2.x ? 1 : 0;
+        double intakePower = gamepad2.x ? 1 : 0 + gamepad2.y ? 1 : 0;
         intakeLeftMotor.setPower(-intakePower);
         intakeRightMotor.setPower(-intakePower);
 

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Autonomous Path 1 (Blue/R)", group = "Autonomous Path")
+@Autonomous(name = "Autonomous Path 2 (Blue/L)", group = "Autonomous Path")
 public class Autonomous_Path1 extends LinearOpMode {
 
 
@@ -74,7 +74,7 @@ public class Autonomous_Path1 extends LinearOpMode {
     public void runOpMode() {
 
         Initialise();
-        AutoFunc.MoveInX(1, 3, 1);
+        AutoFunc.MoveInX(1, 2, 1);
         AutoFunc.MoveInY(1, 2, 1);
 
         clampServo.setPower(clampServoPower);

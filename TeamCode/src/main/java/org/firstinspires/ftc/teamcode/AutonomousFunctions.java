@@ -15,8 +15,8 @@ public class AutonomousFunctions extends LinearOpMode {
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
 
-    private static final double revsPerBlock = 1000;
-    private static final double revsPerFullRotation = 400;
+    private static final double revsPerBlock = 2000;
+    private static final double revsPerFullRotation = 6000;
 
     AutonomousFunctions(DcMotor leftFrontMotor, DcMotor rightFrontMotor, DcMotor leftBackMotor, DcMotor rightBackMotor) {
         this.leftFrontMotor = leftFrontMotor;
@@ -26,15 +26,70 @@ public class AutonomousFunctions extends LinearOpMode {
     }
 
     public void MoveInY(float y, double distance, double speed) {
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ResetEncoders();
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        leftBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        leftBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        leftBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+        rightBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+        leftFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+        rightFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+
+        leftBackMotor.setPower(speed);
+        rightBackMotor.setPower(speed);
+        leftFrontMotor.setPower(speed);
+        rightFrontMotor.setPower(speed);
+
+        while (opModeIsActive() && (leftBackMotor.getCurrentPosition() > 0  || rightBackMotor.getCurrentPosition() > 0 || rightBackMotor.getCurrentPosition() > 0 ||rightFrontMotor.getCurrentPosition() > 0 &&))
+        {
+            telemetry.addData("encoder-back", leftMotor.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+    }
+
+    public void MoveInX(float x, double distance, double speed) {
+        ResetEncoders();
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftBackMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * x)));
+        rightBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * x)));
+        leftFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * x)));
+        rightFrontMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * x)));
+
+        leftBackMotor.setPower(speed);
+        rightBackMotor.setPower(speed);
+        leftFrontMotor.setPower(speed);
+        rightFrontMotor.setPower(speed);
+
+        while (opModeIsActive() && (leftBackMotor.getCurrentPosition() > 0  || rightBackMotor.getCurrentPosition() > 0 || rightBackMotor.getCurrentPosition() > 0 ||rightFrontMotor.getCurrentPosition() > 0 &&))
+        {
+            telemetry.addData("encoder-back", leftMotor.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+    }
+
+    public void ResetEncoders(){
+        leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
