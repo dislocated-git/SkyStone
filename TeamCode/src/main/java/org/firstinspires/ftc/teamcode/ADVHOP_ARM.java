@@ -186,19 +186,18 @@ public class ADVHOP_ARM extends OpMode {
 
         double clampServoPower = gamepad2.right_bumper ? 1 : -gamepad2.right_trigger;
         clampServo.setPower(clampServoPower);
-        double intakePower = gamepad2.x ? 1 : 0 + gamepad2.y ? 1 : 0;
+        double intakePower = (gamepad2.x ? 1 : 0) + (gamepad2.y ? -1 : 0);
         intakeLeftMotor.setPower(-intakePower);
         intakeRightMotor.setPower(-intakePower);
 
 
         // Close grabber
         if (gamepad2.a) {
-            grabberCloseServo.setPower(-0.5);
-        }
+            grabberCloseServo.setPower(-0.5);        }
+
         // Open grabber
         else if (gamepad2.b) {
             Timer timer = new Timer();
-            /*timer.schedule(() -> grabberCloseServo.setPower(-1), 1000);*/
 
             timer.schedule(new TimerTask() {
                 @Override
@@ -230,8 +229,8 @@ public class ADVHOP_ARM extends OpMode {
 
         frontLeftPower = y + -x;
         frontRightPower = y + x;
-        backLeftPower = y + x;
-        backRightPower = y + -x;
+        backLeftPower = -y + x;
+        backRightPower = -y + -x;
 
         if (gamepad1.left_bumper) {
             turning = true;
@@ -292,9 +291,9 @@ public class ADVHOP_ARM extends OpMode {
         }
 
         if (speedSwitch) {
-            basePower = .3;
-        } else {
             basePower = .6;
+        } else {
+            basePower = 1;
         }
 
         double max = Math.abs(CommonMethods.findMax(frontLeftPower, frontRightPower, backLeftPower, backRightPower));
@@ -310,6 +309,13 @@ public class ADVHOP_ARM extends OpMode {
             correction = 0;
         }
 
+        if (turning) {
+            backLeftPower = backLeftPower / basePower;
+            backRightPower = backRightPower / basePower;
+            frontLeftPower = frontLeftPower / basePower;
+            frontRightPower = frontRightPower / basePower;
+
+        }
 
         leftFrontMotor.setPower(-(frontLeftPower + correction));
         rightFrontMotor.setPower(-(frontRightPower - correction));

@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Autonomous Path 2 (Blue/L)", group = "Autonomous Path")
-public class Autonomous_Path1 extends LinearOpMode {
+public class Autonomous_Path2 extends LinearOpMode {
 
 
     private AutonomousFunctions AutoFunc = null;
@@ -17,8 +18,7 @@ public class Autonomous_Path1 extends LinearOpMode {
     private DcMotor rightFrontMotor;
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
-    private DcMotor slideTiltMotor;
-    private DcMotor slideTiltMotor2;
+
     private DcMotorSimple intakeLeftMotor;
     private DcMotorSimple intakeRightMotor;
     private BNO055IMU imu;
@@ -46,11 +46,6 @@ public class Autonomous_Path1 extends LinearOpMode {
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        slideTiltMotor = hardwareMap.get(DcMotor.class, "slideTiltMotor");
-        slideTiltMotor2 = hardwareMap.get(DcMotor.class, "slideTiltMotor2");
-        slideTiltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideTiltMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         clampServo = hardwareMap.get(CRServo.class, "clampServo");
 
         intakeLeftMotor = hardwareMap.get(DcMotorSimple.class,"intakeLeftMotor");
@@ -68,6 +63,7 @@ public class Autonomous_Path1 extends LinearOpMode {
         //Initialise AutonomousFunctions instance with hardware variables; set time interval
         AutoFunc = new AutonomousFunctions(leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor);
 
+        waitForStart();
     }
 
     @Override
@@ -77,17 +73,11 @@ public class Autonomous_Path1 extends LinearOpMode {
         AutoFunc.MoveInX(1, 2, 1);
         AutoFunc.MoveInY(1, 2, 1);
 
-        clampServo.setPower(clampServoPower);
+        clampServo.setPower(-1);
         AutoFunc.MoveInY(1, 2, 1);
         clampServo.setPower(0);
         AutoFunc.MoveInX(1, -2, 1);
-
-    }
-
-    @Override
-    public void stop() {
-        AutoFunc.ResetEncoders()
-        clampServo.setPower(0);
+        sleep(4000);
     }
 
 

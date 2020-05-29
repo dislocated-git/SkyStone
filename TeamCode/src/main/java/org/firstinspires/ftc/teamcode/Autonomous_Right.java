@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Autonomous Path 4 (Red/R)", group = "Autonomous Path")
-public class Autonomous_Path4 extends LinearOpMode {
+@Autonomous(name = "Autonomous Right", group = "Autonomous Path")
+public class Autonomous_Right extends LinearOpMode {
 
 
     private AutonomousFunctions AutoFunc = null;
@@ -47,6 +47,7 @@ public class Autonomous_Path4 extends LinearOpMode {
         rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
+
         clampServo = hardwareMap.get(CRServo.class, "clampServo");
 
         intakeLeftMotor = hardwareMap.get(DcMotorSimple.class,"intakeLeftMotor");
@@ -65,21 +66,15 @@ public class Autonomous_Path4 extends LinearOpMode {
         AutoFunc = new AutonomousFunctions(leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor);
 
         waitForStart();
-
     }
 
     @Override
     public void runOpMode() {
 
         Initialise();
-        AutoFunc.MoveInX(-1, 2, 1);
-        AutoFunc.MoveInY(1, 2, 1);
-
-        clampServo.setPower(1);
-        AutoFunc.MoveInY(1, 2, 1);
-        clampServo.setPower(0);
-        AutoFunc.MoveInX(-1, -2, 1);
+        AutoFunc.MoveInX(-1, 1, 0.6);
         sleep(4000);
+
     }
 
 

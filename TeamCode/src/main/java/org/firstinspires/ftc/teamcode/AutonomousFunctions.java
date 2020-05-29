@@ -27,24 +27,26 @@ public class AutonomousFunctions extends LinearOpMode {
 
     public void MoveInY(float y, double distance, double speed) {
         ResetEncoders();
+
+        leftBackMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * y)));
+        rightBackMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * y)));
+        leftFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+        rightFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
+
+
         leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        rightBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        leftFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
-        rightFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * y)));
 
         leftBackMotor.setPower(speed);
         rightBackMotor.setPower(speed);
         leftFrontMotor.setPower(speed);
         rightFrontMotor.setPower(speed);
 
-        while (opModeIsActive() && (leftBackMotor.getCurrentPosition() > 0  || rightBackMotor.getCurrentPosition() > 0 || rightBackMotor.getCurrentPosition() > 0 ||rightFrontMotor.getCurrentPosition() > 0 &&))
+        while (opModeIsActive() && (leftBackMotor.getCurrentPosition() > 0  || rightBackMotor.getCurrentPosition() > 0 || rightBackMotor.getCurrentPosition() > 0 ||rightFrontMotor.getCurrentPosition() > 0))
         {
-            telemetry.addData("encoder-back", leftMotor.getCurrentPosition());
+
             telemetry.update();
             idle();
         }
@@ -57,24 +59,26 @@ public class AutonomousFunctions extends LinearOpMode {
 
     public void MoveInX(float x, double distance, double speed) {
         ResetEncoders();
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftBackMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * x)));
         rightBackMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * x)));
         leftFrontMotor.setTargetPosition((int)(-Math.round(distance * revsPerBlock * x)));
         rightFrontMotor.setTargetPosition((int)(Math.round(distance * revsPerBlock * x)));
 
+
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         leftBackMotor.setPower(speed);
         rightBackMotor.setPower(speed);
         leftFrontMotor.setPower(speed);
         rightFrontMotor.setPower(speed);
 
-        while (opModeIsActive() && (leftBackMotor.getCurrentPosition() > 0  || rightBackMotor.getCurrentPosition() > 0 || rightBackMotor.getCurrentPosition() > 0 ||rightFrontMotor.getCurrentPosition() > 0 &&))
+        while (opModeIsActive() && (leftBackMotor.isBusy() && rightBackMotor.isBusy() && rightBackMotor.isBusy() && rightFrontMotor.isBusy()))
         {
-            telemetry.addData("encoder-back", leftMotor.getCurrentPosition());
+
             telemetry.update();
             idle();
         }
